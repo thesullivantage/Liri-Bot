@@ -11,9 +11,19 @@ var mediaName = process.argv[3];
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
-// client.get('search/tweets', {q: mediaName}, function(error, tweets, response) {
-//     console.log(tweets);
-// });
+function processCL(command) {
+    switch(apiType) {
+        case("tweet"):
+            Tweet(); break;
+        case("song"):
+            spot(); break;
+        case("movie"):
+            omdbCall(); break;
+        case("whatsay"):
+            whatItSay(); break;
+        // default: console.log("Please enter a valid command")
+    }     
+}
 
 function Tweet() {
     client.get('search/tweets', {q: mediaName}, function(error, tweets, response) {
@@ -39,6 +49,7 @@ function spot () {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
+        console.log("Whole Data: ", response.tracks.items[0] )
         console.log("------------------------------------------------------------")
         console.log("Artists Name: " + response.tracks.items[0].artists[0].name);
         console.log("Song Name: " + response.tracks.items[0].name); 
@@ -66,44 +77,54 @@ function omdbCall () {
             console.log("Starring Actors: " + JSON.parse(body).Actors)
             console.log("------------------------------------------------------------------------------------------------------------------------")
         }
+
     });
 }
 
-
-function tester() {
-    if (apiType == "my-tweets" ) {
-        Tweet();
-    } 
-
-    else if (apiType == "spotify-this-song" ) {
-        spot ();
-    }
-
-
-    else if (apiType == "movie-this") {
-        omdbCall();
-    }
-}
-
-
-if (apiType == "do-what-it-says" ) {
+function whatItSay () {
     fs.readFile("random.txt", "utf8", function(error, data) {
 
         if (error) {
-          return console.log(error);
+          return console.log("ERR", error);
         }
 
         var dataArr = data.split(",");
         apiType = dataArr[0];
         mediaName = dataArr[1];
         
-        tester();
+        processCL();
     });
-
-} else {
-    tester();
 }
 
+processCL(apiType);
+
+spotify.search({ type: 'track', query: "Let the bodies hit the floor" }, function(err, response) {
+    if (err) {
+        return console.log('Error occurred: ' + err);
+    }
+    console.log("------------------------------------------------------------")
+    console.log("Artists Name: " + response.tracks.items[0].artists[0].name);
+    console.log("Song Name: " + response.tracks.items[0].name); 
+    console.log("Link: " + response.tracks.items[0].external_urls.spotify);
+    console.log("Album Name: " + response.tracks.items[0].album.name);
+    console.log("------------------------------------------------------------")
+})
+
+// Old Testing Function
+// function tester() {
+//     if (apiType == "my-tweets" ) {
+//         Tweet();
+//     } 
+
+//     else if (apiType == "spotify-this-song" ) {
+//         spot ();
+//     }
+
+
+//     else if (apiType == "movie-this") {
+//         omdbCall();
+//     }
+// }
 
 
 //utility packages
