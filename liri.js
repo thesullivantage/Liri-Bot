@@ -98,18 +98,6 @@ function whatItSay () {
 
 processCL(apiType);
 
-spotify.search({ type: 'track', query: "Let the bodies hit the floor" }, function(err, response) {
-    if (err) {
-        return console.log('Error occurred: ' + err);
-    }
-    console.log("------------------------------------------------------------")
-    console.log("Artists Name: " + response.tracks.items[0].artists[0].name);
-    console.log("Song Name: " + response.tracks.items[0].name); 
-    console.log("Link: " + response.tracks.items[0].external_urls.spotify);
-    console.log("Album Name: " + response.tracks.items[0].album.name);
-    console.log("------------------------------------------------------------")
-})
-
 // Old Testing Function
 // function tester() {
 //     if (apiType == "my-tweets" ) {
